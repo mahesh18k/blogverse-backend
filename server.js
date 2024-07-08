@@ -4,7 +4,8 @@ import bodyParser from "body-parser";
 import mongoose from "mongoose";
 import dotenv from 'dotenv';
 
-import { signup, login } from './Controllers/authController.js'
+import { signup, login } from './Controllers/authController.js';
+import { getBlogs, getBlogById } from './Controllers/blogController.js';
 
 
 const app = express();
@@ -24,10 +25,13 @@ mongoose.connect(uri)
 
 
 
-// Define routes directly
+// Define user routes
 app.post('/signup', signup);
 app.post('/login', login);
 
+// Define blog routes
+app.get('/blog', getBlogs);
+app.get('/blog/:id', getBlogById);
 
 
 app.listen(port, () => {
