@@ -1,5 +1,5 @@
 import Blog from "../Models/blogModel.js";
-// import Content from "../Models/contentModel.js";
+import Content from "../Models/contentModel.js";
 
 
 // Controller to get all blogs
@@ -13,6 +13,7 @@ export const getBlogs = async (req, res) => {
     }
 };
 
+
 // Controller to get a blog by ID
 export const getBlogById = async (req, res) => {
     const { id } = req.params;
@@ -21,9 +22,133 @@ export const getBlogById = async (req, res) => {
         if (!blog) {
             return res.status(404).send('Blog not found');
         }
+        blog.view_count += 1;
+        await blog.save();
         res.status(200).json(blog);
     } catch (err) {
         console.log(err);
         res.status(500).send('Error fetching blog');
+    }
+};
+
+
+
+// Controller to create a new blog
+export const createBlog = async (req, res) => {
+    const { title, author, content, images } = req.body;
+
+    try {
+        const newContent = new Content({ content });
+        const savedContent = await newContent.save();
+
+        const newBlog = new Blog({
+            title,
+            author,
+            content_id: savedContent._id,
+            images
+        });
+
+        const savedBlog = await newBlog.save();
+
+        res.status(201).json({ message: 'Blog created successfully', blogId: savedBlog._id });
+    } catch (err) {
+        console.log(err);
+        res.status(500).send('Error creating blog');
+    }
+};
+
+
+
+// Controller to update a blog
+export const updateBlog = async (req, res) => {
+    const { id } = req.params;
+    const { title, content, images } = req.body;
+
+    try {
+        const blog = await Blog.findById(id);
+        if (!blog) {
+            return res.status(404).send('Blog not found');
+        }
+
+        if (title) blog.title = title;
+        if (images) blog.images = images;
+        if (content) {
+            const blogContent = await Content.findById(blog.content_id);
+            if (blogContent) {
+                blogContent.content = content;
+                await blogContent.save();
+            }
+        }
+
+        const updatedBlog = await blog.save();
+
+        res.status(200).json({ message: 'Blog updated successfully', blog: updatedBlog });
+    } catch (err) {
+        console.log(err);
+        res.status(500).send('Error updating blog');
+    }
+};
+
+
+
+// Controller to delete a blog
+export const deleteBlog = async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const blog = await Blog.findById(id);
+        if (!blog) {
+            return res.status(404).send('Blog not found');
+        }
+
+        await Content.findByIdAndDelete(blog.content_id);
+        await blog.delete();
+
+        res.status(200).json({ message: 'Blog deleted successfully' });
+    } catch (err) {
+        console.log(err);
+        res.status(500).send('Error deleting blog');
+    }
+};
+
+
+// Controller to upvote a blog
+export const upvoteBlog = async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const blog = await Blog.findById(id);
+        if (!blog) {
+            return res.status(404).send('Blog not found');
+        }
+
+        blog.upvotes += 1;
+        await blog.save();
+
+        res.status(200).json({ message: 'Blog upvoted successfully', upvotes: blog.upvotes });
+    } catch (err) {
+        console.log(err);
+        res.status(500).send('Error upvoting blog');
+    }
+};
+
+
+// Controller to downvote a blog
+export const downvoteBlog = async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const blog = await Blog.findById(id);
+        if (!blog) {
+            return res.status(404).send('Blog not found');
+        }
+
+        blog.downvotes += 1;
+        await blog.save();
+
+        res.status(200).json({ message: 'Blog downvoted successfully', downvotes: blog.downvotes });
+    } catch (err) {
+        console.log(err);
+        res.status(500).send('Error downvoting blog');
     }
 };
