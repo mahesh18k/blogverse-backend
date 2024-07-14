@@ -1,11 +1,19 @@
 import mongoose from 'mongoose';
 
 const blogSchema = new mongoose.Schema({
+    thumbnail: {
+        type: String,
+        required: true,
+    },
     title: {
         type: String,
         required: true,
         maxlength: 200,
     },
+    topic_tags: [{
+        type: String,
+        required: true,
+    }],
     author: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
@@ -23,6 +31,10 @@ const blogSchema = new mongoose.Schema({
     images: [{
         type: String,
     }],
+    views: {
+        type: Number,
+        default: 0,
+    },
     upvotes: {
         type: Number,
         default: 0,
@@ -30,11 +42,7 @@ const blogSchema = new mongoose.Schema({
     downvotes: {
         type: Number,
         default: 0,
-    },
-    view_count: {
-        type: Number,
-        default: 0,
-    },
+    }
 }, { collection: 'blogs' });
 
 const Blog = mongoose.model('Blog', blogSchema);
