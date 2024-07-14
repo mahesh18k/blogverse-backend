@@ -35,14 +35,16 @@ export const getBlogById = async (req, res) => {
 
 // Controller to create a new blog
 export const createBlog = async (req, res) => {
-    const { title, author, content, images } = req.body;
+    const { thumbnail, title, topic_tags, author, content, images } = req.body;
 
     try {
         const newContent = new Content({ content });
         const savedContent = await newContent.save();
 
         const newBlog = new Blog({
+            thumbnail,
             title,
+            topic_tags,
             author,
             content_id: savedContent._id,
             images
@@ -62,7 +64,7 @@ export const createBlog = async (req, res) => {
 // Controller to update a blog
 export const updateBlog = async (req, res) => {
     const { id } = req.params;
-    const { title, content, images } = req.body;
+    const { thumbnail, title, topic_tags, content, images } = req.body;
 
     try {
         const blog = await Blog.findById(id);
@@ -70,18 +72,18 @@ export const updateBlog = async (req, res) => {
             return res.status(404).send('Blog not found');
         }
 
-        if (title) blog.title = title;
-        if (images) blog.images = images;
         if (content) {
-            const blogContent = await Content.findById(blog.content_id);
-            if (blogContent) {
-                blogContent.content = content;
-                await blogContent.save();
-            }
+            const existingContent = await Content.findById(blog.content_id);
+            existingContent.content = content;
+            await existingContent.save();
         }
 
-        const updatedBlog = await blog.save();
+        blog.thumbnail = thumbnail || blog.thumbnail;
+        blog.title = title || blog.title;
+        blog.topic_tags = topic_tags || blog.topic_tags;
+        blog.images = images || blog.images;
 
+        const updatedBlog = await blog.save();
         res.status(200).json({ message: 'Blog updated successfully', blog: updatedBlog });
     } catch (err) {
         console.log(err);
