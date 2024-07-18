@@ -5,8 +5,9 @@ import mongoose from "mongoose";
 import dotenv from 'dotenv';
 
 import { signup, login } from './Controllers/authController.js';
-import { getBlogs, getBlogById, createBlog, updateBlog, deleteBlog, upvoteBlog, downvoteBlog } from './Controllers/blogController.js';
 import { createTopic } from "./Controllers/topicController.js";
+import { getBlogs, getBlogById, createBlog, updateBlog, deleteBlog, upvoteBlog, downvoteBlog } from './Controllers/blogController.js';
+import { createProfile, getProfileByUserId, updateProfileStats, deleteProfile } from './Controllers/profileController.js';
 
 
 const app = express();
@@ -26,22 +27,29 @@ mongoose.connect(uri)
 
 
 
-// Define user routes
+// Auth Routes
 app.post('/signup', signup);
 app.post('/login', login);
 
 
-// Define blog routes
+// Blog Routes
 app.get('/blog', getBlogs);
 app.get('/blog/:id', getBlogById);
 app.post('/blog', createBlog);
 app.put('/blog/:id', updateBlog);
 app.delete('/blog/:id', deleteBlog);
-
 app.post('/blog/:id/upvote', upvoteBlog);
 app.post('/blog/:id/downvote', downvoteBlog);
 
 app.post('/createtopic', createTopic);
+
+
+// Profile Routes
+app.post('/profile', createProfile);
+app.get('/profile/:userId', getProfileByUserId);
+app.patch('/profile/stats/:userId', updateProfileStats);
+app.delete('/profile/:userId', deleteProfile);
+
 
 
 app.listen(port, () => {
