@@ -27,7 +27,7 @@ const profileSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Blog'
     }]
-});
+}, { collection: 'profile' });
 
 const Profile = mongoose.model('Profile', profileSchema);
 

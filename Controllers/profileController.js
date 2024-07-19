@@ -1,5 +1,5 @@
-import Profile from "../Models/profileModel";
-import Blog from "../Models/blogModel";
+import Profile from "../Models/profileModel.js";
+import Blog from "../Models/blogModel.js";
 
 // Create a new profile for a user
 export const createProfile = async (req, res) => {
