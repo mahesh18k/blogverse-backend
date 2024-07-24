@@ -6,7 +6,7 @@ import dotenv from 'dotenv';
 
 import { signup, login } from './Controllers/authController.js';
 import { createTopic } from "./Controllers/topicController.js";
-import { getBlogs, getBlogById, createBlog, updateBlog, deleteBlog, upvoteBlog, downvoteBlog } from './Controllers/blogController.js';
+import { getBlogs, getBlogById, getUserBlogsById, createBlog, updateBlog, deleteBlog, upvoteBlog, downvoteBlog } from './Controllers/blogController.js';
 import { createProfile, getProfileByUserId, updateProfileStats, deleteProfile } from './Controllers/profileController.js';
 
 
@@ -40,6 +40,8 @@ app.put('/blog/:id', updateBlog);
 app.delete('/blog/:id', deleteBlog);
 app.post('/blog/:id/upvote', upvoteBlog);
 app.post('/blog/:id/downvote', downvoteBlog);
+app.get('/blog/userblogs/:userId', getUserBlogsById);
+
 
 app.post('/createtopic', createTopic);
 

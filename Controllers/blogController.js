@@ -39,6 +39,22 @@ export const getBlogById = async (req, res) => {
 
 
 
+export const getUserBlogsById = async (req, res) => {
+    const { userId } = req.params;
+    try {
+        const userBlogs = await Blog.find({ author: userId }).populate('author', 'first_name last_name').populate('content_id');
+        if (!userBlogs) {
+            return res.status(404).send('Blogs not found for this user');
+        }
+        res.status(200).json(userBlogs);
+    } catch (error) {
+        console.error('Error fetching user blogs:', error);
+        res.status(500).send('Error fetching user blogs');
+    }
+};
+
+
+
 // Controller to create a new blog
 export const createBlog = async (req, res) => {
     const { thumbnail, title, topic_tags, author, content, images } = req.body;
@@ -57,11 +73,6 @@ export const createBlog = async (req, res) => {
         });
 
         const savedBlog = await newBlog.save();
-
-        // // Update profile total_blogs and add blog ID
-        // await axios.patch(`http://localhost:3001/profile/stats/${author}`, {
-        //     blogId: savedBlog._id
-        // }).catch(err => console.error('Error updating profile stats:', err));
 
         res.status(201).json({ message: 'Blog created successfully', blogId: savedBlog._id });
     } catch (err) {
