@@ -22,7 +22,7 @@ export const getBlogById = async (req, res) => {
         if (!blog) {
             return res.status(404).send('Blog not found');
         }
-        blog.view_count += 1;
+        blog.views += 1;
         await blog.save();
 
         //  // Update profile views
