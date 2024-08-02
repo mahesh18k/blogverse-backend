@@ -4,7 +4,7 @@ import bodyParser from "body-parser";
 import mongoose from "mongoose";
 import dotenv from 'dotenv';
 
-import { signup, login } from './Controllers/authController.js';
+import { signup, login, getUserName } from './Controllers/authController.js';
 import { createTopic } from "./Controllers/topicController.js";
 import { getBlogs, getBlogById, getUserBlogsById, createBlog, updateBlog, deleteBlog, upvoteBlog, downvoteBlog } from './Controllers/blogController.js';
 import { createProfile, getProfileByUserId, updateProfileStats, deleteProfile } from './Controllers/profileController.js';
@@ -30,6 +30,7 @@ mongoose.connect(uri)
 // Auth Routes
 app.post('/signup', signup);
 app.post('/login', login);
+app.get('/username/:userId', getUserName);
 
 
 // Blog Routes
