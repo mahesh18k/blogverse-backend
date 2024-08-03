@@ -22,13 +22,9 @@ export const getBlogById = async (req, res) => {
         if (!blog) {
             return res.status(404).send('Blog not found');
         }
+
         blog.views += 1;
         await blog.save();
-
-        //  // Update profile views
-        //  await axios.patch(`http://localhost:3001/profile/stats/${blog.author}`, {
-        //     views: 1
-        // }).catch(err => console.error('Error updating profile stats:', err));
 
         res.status(200).json(blog);
     } catch (err) {
@@ -149,11 +145,6 @@ export const upvoteBlog = async (req, res) => {
         blog.upvotes += 1;
         await blog.save();
 
-        // // Update profile upvotes asynchronously
-        // await axios.patch(`http://localhost:3001/profile/stats/${blog.author}`, {
-        //     upvotes: 1
-        // }).catch(err => console.error('Error updating profile stats:', err));
-
         res.status(200).json({ message: 'Blog upvoted successfully', upvotes: blog.upvotes });
     } catch (err) {
         console.log(err);
@@ -174,11 +165,6 @@ export const downvoteBlog = async (req, res) => {
 
         blog.downvotes += 1;
         await blog.save();
-
-        // // Update profile downvotes
-        // await axios.patch(`http://localhost:3001/profile/stats/${blog.author}`, {
-        //     downvotes: 1
-        // }).catch(err => console.error('Error updating profile stats:', err));
 
         res.status(200).json({ message: 'Blog downvoted successfully', downvotes: blog.downvotes });
     } catch (err) {

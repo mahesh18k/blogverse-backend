@@ -1,64 +1,28 @@
-import Profile from "../Models/profileModel.js";
+import Blog from "../Models/blogModel.js";
 
 
-// Create a new profile for a user
-export const createProfile = async (req, res) => {
+export const getProfile = async (req, res) => {
+    const { userId } = req.params;
+
     try {
-        const { user_id } = req.body;
-        const newProfile = new Profile({ user_id });
-        await newProfile.save();
-        res.status(201).json(newProfile);
-    } catch (error) {
-        res.status(400).json({ message: error.message });
-    }
-};
+        const blogs = await Blog.find({ author: userId }).populate('author', 'first_name last_name');
 
-// Get profile by user ID
-export const getProfileByUserId = async (req, res) => {
-    try {
-        const profile = await Profile.findOne({ user_id: req.params.userId }).populate('blogs');
-        if (!profile) {
-            return res.status(404).json({ message: 'Profile not found' });
-        }
+        const profile = {
+            total_blogs: [],
+            total_views: 0,
+            total_upvotes: 0,
+            total_downvotes: 0
+        };
+
+        blogs.forEach(blog => {
+            profile.total_blogs.push(blog);
+            profile.total_views += blog.views;
+            profile.total_upvotes += blog.upvotes;
+            profile.total_downvotes += blog.downvotes;
+        });
+
         res.status(200).json(profile);
     } catch (error) {
-        res.status(400).json({ message: error.message });
-    }
-};
-
-// Update profile stats (views, upvotes, downvotes)
-export const updateProfileStats = async (req, res) => {
-    try {
-        const { userId } = req.params;
-        const { views, upvotes, downvotes, blogId } = req.body;
-
-        const profile = await Profile.findOne({ user_id: userId });
-        if (!profile) {
-            return res.status(404).json({ message: 'Profile not found' });
-        }
-
-        if (views !== undefined) profile.total_views += views;
-        if (upvotes !== undefined) profile.total_upvotes += upvotes;
-        if (downvotes !== undefined) profile.total_downvotes += downvotes;
-        if (blogId) profile.blogs.push(blogId);
-
-        await profile.save();
-        res.status(200).json(profile);
-    } catch (error) {
-        res.status(400).json({ message: error.message });
-    }
-};
-
-// Delete a profile
-export const deleteProfile = async (req, res) => {
-    try {
-        const { userId } = req.params;
-        const profile = await Profile.findOneAndDelete({ user_id: userId });
-        if (!profile) {
-            return res.status(404).json({ message: 'Profile not found' });
-        }
-        res.status(200).json({ message: 'Profile deleted' });
-    } catch (error) {
-        res.status(400).json({ message: error.message });
+        res.status(500).json({ message: error.message });
     }
 };

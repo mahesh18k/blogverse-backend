@@ -7,7 +7,7 @@ import dotenv from 'dotenv';
 import { signup, login, getUserName } from './Controllers/authController.js';
 import { createTopic } from "./Controllers/topicController.js";
 import { getBlogs, getBlogById, getUserBlogsById, createBlog, updateBlog, deleteBlog, upvoteBlog, downvoteBlog } from './Controllers/blogController.js';
-import { createProfile, getProfileByUserId, updateProfileStats, deleteProfile } from './Controllers/profileController.js';
+import { getProfile } from './Controllers/profileController.js';
 
 
 const app = express();
@@ -48,10 +48,7 @@ app.post('/createtopic', createTopic);
 
 
 // Profile Routes
-app.post('/profile', createProfile);
-app.get('/profile/:userId', getProfileByUserId);
-app.patch('/profile/stats/:userId', updateProfileStats);
-app.delete('/profile/:userId', deleteProfile);
+app.get('/profile/:userId', getProfile);
 
 
 
