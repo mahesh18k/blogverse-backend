@@ -8,6 +8,7 @@ import { signup, login, getUserName } from './Controllers/authController.js';
 import { createTopic } from "./Controllers/topicController.js";
 import { getBlogs, getBlogById, getUserBlogsById, createBlog, updateBlog, deleteBlog, upvoteBlog, downvoteBlog } from './Controllers/blogController.js';
 import { getProfile } from './Controllers/profileController.js';
+import { getUserBookmarks, addBookmark, removeBookmark, checkBookmarkStatus, getBookmarkCount, clearAllBookmarks } from './Controllers/bookmarkController.js';
 
 
 const app = express();
@@ -50,6 +51,13 @@ app.post('/createtopic', createTopic);
 // Profile Routes
 app.get('/profile/:userId', getProfile);
 
+// Bookmark Routes
+app.get('/bookmarks/:userId', getUserBookmarks);
+app.post('/bookmarks/:userId', addBookmark);
+app.delete('/bookmarks/:userId', removeBookmark);
+app.get('/bookmarks/:userId/status/:blogId', checkBookmarkStatus);
+app.get('/bookmarks/:userId/count', getBookmarkCount);
+app.delete('/bookmarks/:userId/clear', clearAllBookmarks);
 
 
 app.listen(port, () => {
