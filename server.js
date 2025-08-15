@@ -44,7 +44,7 @@ app.post('/blog/:id/upvote', upvoteBlog);
 app.post('/blog/:id/downvote', downvoteBlog);
 app.get('/blog/userblogs/:userId', getUserBlogsById);
 
-
+// Topic Routes
 app.post('/createtopic', createTopic);
 
 
