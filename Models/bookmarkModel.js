@@ -44,16 +44,16 @@ const bookmarkSchema = new mongoose.Schema({
             default: 0
         }
     }
-}, { 
+}, {
     collection: 'bookmarks',
     timestamps: true
 });
 
 // Compound index to ensure a user can't bookmark the same blog twice
-bookmarkSchema.index({ user_id: 1, blog_id: 1 }, { unique: true });
+// bookmarkSchema.index({ user_id: 1, blog_id: 1 }, { unique: true });
 
 // Index for efficient user bookmark queries
-bookmarkSchema.index({ user_id: 1, bookmarked_at: -1 });
+// bookmarkSchema.index({ user_id: 1, bookmarked_at: -1 });
 
 const Bookmark = mongoose.model('Bookmark', bookmarkSchema);
 
